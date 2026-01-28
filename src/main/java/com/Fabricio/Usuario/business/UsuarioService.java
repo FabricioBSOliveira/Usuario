@@ -6,6 +6,7 @@ import com.Fabricio.Usuario.infrastructure.entity.Usuario;
 import com.Fabricio.Usuario.infrastructure.exception.ConflictException;
 import com.Fabricio.Usuario.infrastructure.exception.ResourceNotFoundException;
 import com.Fabricio.Usuario.infrastructure.repository.UsuarioRepository;
+import com.Fabricio.Usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioConverter usuarioConverter;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public UsuarioDTO salvaUsuario(UsuarioDTO usuarioDTO){
         emailExiste(usuarioDTO.getEmail());
@@ -51,6 +53,26 @@ public class UsuarioService {
 
     public void deletaUsuarioPorEmail(String email){
         usuarioRepository.deleteByEmail(email);
+
+    }
+
+    public UsuarioDTO atualizaDadosUsuario(String token ,UsuarioDTO dto){
+        //buscado o email do token para nao ser necessario passar o email
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
+
+        //senha criptografada caso seja nova
+        dto.setSenha(dto.getSenha() != null ? passwordEncoder.encode(dto.getSenha()) : null);
+
+        // Localizado o Usuario com todas sua informacoes para pegar informacoes nao passadas pelo ususario
+        Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(() ->
+                new ResourceNotFoundException("Email nao localizado"));
+
+        //Mescladoo os dados recebidos entre Dto com os dados do banco de dados
+        Usuario usuario = usuarioConverter.updateUsuario(dto,usuarioEntity);
+
+
+        //salvou os dados dos usuarios no banco de dados e retonou um usuarioDTO
+        return usuarioConverter.paraUsuarioDTO(usuarioRepository.save(usuario));
 
     }
 

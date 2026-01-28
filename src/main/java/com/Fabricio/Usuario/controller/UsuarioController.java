@@ -5,6 +5,7 @@ import com.Fabricio.Usuario.business.dto.UsuarioDTO;
 import com.Fabricio.Usuario.infrastructure.entity.Usuario;
 import com.Fabricio.Usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.osgi.annotation.bundle.Header;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +44,13 @@ public class UsuarioController {
     public ResponseEntity<Void> deletaUsuarioPorEmail(@PathVariable String email){
         usuarioService.deletaUsuarioPorEmail(email);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<UsuarioDTO> atualizaDadoUsuario(@RequestBody UsuarioDTO dto,
+                                                          @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.atualizaDadosUsuario(token,dto));
+
     }
 
 
