@@ -1,6 +1,8 @@
 package com.Fabricio.Usuario.controller;
 
 import com.Fabricio.Usuario.business.UsuarioService;
+import com.Fabricio.Usuario.business.dto.EnderecoDTO;
+import com.Fabricio.Usuario.business.dto.TelefoneDTO;
 import com.Fabricio.Usuario.business.dto.UsuarioDTO;
 import com.Fabricio.Usuario.infrastructure.entity.Usuario;
 import com.Fabricio.Usuario.infrastructure.security.JwtUtil;
@@ -36,7 +38,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<Usuario> buscaUsuarioPorEmail(@RequestParam("email") String email){
+    public ResponseEntity<UsuarioDTO> buscaUsuarioPorEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
     }
 
@@ -51,6 +53,18 @@ public class UsuarioController {
                                                           @RequestHeader("Authorization") String token){
         return ResponseEntity.ok(usuarioService.atualizaDadosUsuario(token,dto));
 
+    }
+
+    @PutMapping("/endereco")
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO dto,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaEndereco(id,dto));
+    }
+
+    @PutMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestBody TelefoneDTO dto,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaTelefone(id,dto));
     }
 
 
