@@ -1,6 +1,7 @@
 package com.Fabricio.Usuario.controller;
 
 import com.Fabricio.Usuario.infrastructure.exception.ConflictException;
+import com.Fabricio.Usuario.infrastructure.exception.IllegalArgumentException;
 import com.Fabricio.Usuario.infrastructure.exception.ResourceNotFoundException;
 import com.Fabricio.Usuario.infrastructure.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -24,5 +25,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

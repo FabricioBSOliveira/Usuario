@@ -1,9 +1,11 @@
 package com.Fabricio.Usuario.controller;
 
 import com.Fabricio.Usuario.business.UsuarioService;
+import com.Fabricio.Usuario.business.ViaCepService;
 import com.Fabricio.Usuario.business.dto.EnderecoDTO;
 import com.Fabricio.Usuario.business.dto.TelefoneDTO;
 import com.Fabricio.Usuario.business.dto.UsuarioDTO;
+import com.Fabricio.Usuario.infrastructure.clients.ViaCepDTO;
 import com.Fabricio.Usuario.infrastructure.entity.Usuario;
 import com.Fabricio.Usuario.infrastructure.security.JwtUtil;
 import com.Fabricio.Usuario.infrastructure.security.SecurityConfig;
@@ -28,6 +30,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ViaCepService viaCepService;
 
     @PostMapping
     @Operation(summary = "Salvar usuario", description = "Cria um novo Usuario")
@@ -128,6 +131,11 @@ public class UsuarioController {
     public ResponseEntity<TelefoneDTO> cadastraTelefone(@RequestBody TelefoneDTO dto,
                                                         @RequestHeader("Authorization") String token){
         return ResponseEntity.ok(usuarioService.cadastroTelefone(token,dto));
+    }
+
+    @GetMapping("/endereco/{cep}")
+    public ResponseEntity<ViaCepDTO> buscarDadosCep(@PathVariable("cep") String cep){
+        return ResponseEntity.ok(viaCepService.buscarDadosEndereco(cep));
     }
 
 
