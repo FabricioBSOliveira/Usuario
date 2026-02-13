@@ -21,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -139,7 +138,7 @@ public class UsuarioService {
     public EnderecoDTO cadastroEndereco(String token, EnderecoDTO dto){
         String email = jwtUtil.extrairEmailToken(token.substring(7));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
-                new ResourceNotFoundException("Email nao localizado" + email));
+                new ResourceNotFoundException("Endereco nao localizado" + email));
 
         Endereco endereco = usuarioConverter.paraEndercoEntity(dto, usuario.getId());
         Endereco enderecoEntity = enderecoRepository.save(endereco);
@@ -149,7 +148,7 @@ public class UsuarioService {
     public TelefoneDTO cadastroTelefone(String token, TelefoneDTO dto){
         String email = jwtUtil.extrairEmailToken(token.substring(7));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
-                new ResourceNotFoundException("Email nao localizado" + email));
+                new ResourceNotFoundException("Telefone nao localizado" + email));
 
         Telefone telefone= usuarioConverter.paraTelefoneEntity(dto, usuario.getId());
         Telefone telefoneEntity = telefoneRepository.save(telefone);
